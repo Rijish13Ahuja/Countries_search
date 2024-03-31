@@ -1,12 +1,10 @@
-import { useState,useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -15,7 +13,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await fetch("https://restcountries.com/v3.1/all");
+        const resp = await fetch('https://restcountries.com/v3.1/all');
         const data = await resp.json();
         setCountries(data);
       } catch (err) {
@@ -30,11 +28,10 @@ function App() {
       country.name.common.toLowerCase().includes(search.toLowerCase())
     );
     setFiltered(data);
-  }, [search]);
+  }, [search, countries]);
 
-  console.log(countries);
   return (
-    <div>
+    <div className="App">
       <div className="inp">
         <input
           type="text"
@@ -42,24 +39,13 @@ function App() {
           onChange={(e) => handleChange(e)}
         />
       </div>
-      <div className="App">
-        {search === ""
-          ? countries.map((country) => {
-              return (
-                <div className="countryCard">
-                  <img src={country.flags.png} alt={country.flag}></img>
-                  <h3>{country.name.common}</h3>
-                </div>
-              );
-            })
-          : filtered.map((country) => {
-              return (
-                <div className="countryCard">
-                  <img src={country.flags.png} alt={country.flag}></img>
-                  <h3>{country.name.common}</h3>
-                </div>
-              );
-            })}
+      <div className="country-container">
+        {(search === '' ? countries : filtered).map((country) => (
+          <div className="countryCard" key={country.cca3}>
+            <img src={country.flags.png} alt={country.name.common}></img>
+            <h2>{country.name.common}</h2>
+          </div>
+        ))}
       </div>
     </div>
   );
